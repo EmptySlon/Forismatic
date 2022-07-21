@@ -1,8 +1,12 @@
 package com.emptyslon.forismatic
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.SyncStateContract.Helpers.update
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.emptyslon.forismatic.dataBase.Quote
@@ -12,10 +16,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-lateinit var binding: ActivityMainBinding
+
 
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
+
+    private val handler = Handler(Looper.getMainLooper())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -27,8 +35,24 @@ class MainActivity : AppCompatActivity() {
         binding.btGetRandomQuote.setOnClickListener {
             getRandomQuote()
         }
+        binding.btQuotesList.setOnClickListener {
+            val intent = Intent(this, QuotesListActivity::class.java)
+            startActivity(intent)
+        }
+
+        Thread {
+
+            repeat(10) {
+                Thread.sleep(1000)
+                handler.post { updateCounter(it) }
+            }
+        }.start()
 
 
+    }
+
+    private fun updateCounter(count: Int) {
+        binding.txCounter.text = count.toString()
     }
 
     private fun getRandomQuote() {
