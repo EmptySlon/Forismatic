@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.SyncStateContract.Helpers.update
-import android.widget.ProgressBar
 import android.widget.Toast
-import com.emptyslon.forismatic.dataBase.Quote
+import com.emptyslon.forismatic.dataBase.QuotesList
 import com.emptyslon.forismatic.databinding.ActivityMainBinding
 import com.emptyslon.forismatic.retrofit.RetrofitClient
 import retrofit2.Call
@@ -40,13 +38,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        Thread {
 
-            repeat(10) {
-                Thread.sleep(1000)
-                handler.post { updateCounter(it) }
-            }
-        }.start()
 
 
     }
@@ -57,18 +49,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun getRandomQuote() {
         val retrofitData = RetrofitClient.retrofit.getData()
-        retrofitData.enqueue(object : Callback<Quote?> {
+        retrofitData.enqueue(object : Callback<QuotesList?> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(
-                call: Call<Quote?>,
-                response: Response<Quote?>
+                call: Call<QuotesList?>,
+                response: Response<QuotesList?>
             ) {
                 val quote = response.body()!!.first()
                 binding.quoteAuthor.text = quote.a
                 binding.quoteText.text = quote.q
             }
 
-            override fun onFailure(call: Call<Quote?>, t: Throwable) {
+            override fun onFailure(call: Call<QuotesList?>, t: Throwable) {
                 Toast.makeText(
                     this@MainActivity,
                     "Failed to establish connection",

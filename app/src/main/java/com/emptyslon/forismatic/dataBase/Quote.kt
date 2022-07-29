@@ -1,3 +1,7 @@
 package com.emptyslon.forismatic.dataBase
 
-class Quote : ArrayList<QuoteItem>()
+data class Quote(
+    val a: String,
+    val h: String,
+    val q: String
+)
